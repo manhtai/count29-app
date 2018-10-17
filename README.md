@@ -1,5 +1,7 @@
 # count29-app
 
+A single web application for [count29][0] project. Written in [VueJS][1].
+
 ## Project setup
 ```
 yarn install
@@ -24,3 +26,7 @@ yarn run test
 ```
 yarn run lint
 ```
+
+
+[0]: https://github.com/manhtai/count29
+[1]: https://vuejs.org
