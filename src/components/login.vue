@@ -26,7 +26,7 @@
               <div class="form-group row">
                   <label class="col-3 col-sm-3 col-form-label">Server</label>
                   <div class="col-9 col-sm-9">
-                    <input type="url" class="form-control" required placeholder="m15.cloudmqtt.com" v-model="mqtt.server">
+                    <input type="type" class="form-control" required placeholder="m15.cloudmqtt.com" v-model="mqtt.server">
                   </div>
               </div>
               <div class="form-group row">
@@ -36,15 +36,15 @@
                   </div>
               </div>
               <div class="form-group row">
-                  <label class="col-3 col-sm-3 col-form-label">Port</label>
-                  <div class="col-9 col-sm-9">
-                    <input type="number" class="form-control" required placeholder="1883" v-model="mqtt.port">
-                  </div>
-              </div>
-              <div class="form-group row">
                   <label class="col-3 col-sm-3 col-form-label">Password</label>
                   <div class="col-9 col-sm-9">
                     <input type="password" class="form-control" required placeholder="Psssst!" v-model="mqtt.password">
+                  </div>
+              </div>
+              <div class="form-group row">
+                  <label class="col-3 col-sm-3 col-form-label">Port</label>
+                  <div class="col-9 col-sm-9">
+                    <input type="number" class="form-control" required placeholder="1883" v-model="mqtt.port">
                   </div>
               </div>
 
@@ -62,6 +62,7 @@
 
 <script>
 import router from '../router'
+var mqtt = require('mqtt')
 
 export default {
   name: 'login',
@@ -72,8 +73,13 @@ export default {
       error: ''
     }
   },
+  computed: {
+    mqttUrl: function () {
+      return 'wss://' + this.mqtt.user + ':' + this.mqtt.password + '@' + this.mqtt.server + ':' + this.mqtt.port
+    }
+  },
   created () {
-    if (this.$cookie.get('auth')) {
+    if (this.$cookie.get('mqttUrl')) {
       router.push('dashboard')
     }
   },
@@ -82,6 +88,18 @@ export default {
       this.isLoading = true
       this.error = ''
       // Call MQTT here
+      var client = mqtt.connect(this.mqttUrl)
+      self = this
+      client.on('connect', function() {
+        self.$cookie.set('mqttUrl', self.mqttUrl, 360)
+        self.isLoading = false
+        router.push('dashboard')
+        client.end()
+      })
+      client.on('error', function() {
+        self.isLoading = false
+        self.error = "Please check your credentials!"
+      })
     }
   }
 }

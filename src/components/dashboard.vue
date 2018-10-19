@@ -17,18 +17,7 @@ export default {
     'user'
   ]),
   created () {
-    this.isLoading = true
-    let now = new Date().getTime()
-    this.$http.get(config.api.studentCourse).then((res) => {
-      this.course = res.body
-      this.isLoading = false
-      this.course.forEach((item) => {
-        if (new Date(item.start_date).getTime() < now) {
-          item.active = true
-        }
-        return item
-      })
-    })
+    this.isLoading = false
   },
   methods: {}
 }

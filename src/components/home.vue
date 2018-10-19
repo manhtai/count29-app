@@ -40,7 +40,7 @@ export default {
     }
   },
   created () {
-    if (!this.$cookie.get('auth')) {
+    if (!this.$cookie.get('mqttUrl')) {
       router.push({
         path: '/'
       })
@@ -53,7 +53,7 @@ export default {
   ]),
   methods: {
     logout () {
-      this.$cookie.delete('auth')
+      this.$cookie.delete('mqttUrl')
       router.push('/')
     },
   }

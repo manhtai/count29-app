@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.11",
+    "mqtt": "^2.18.8",
     "vue": "^2.5.3",
     "vue-cookie": "^1.1.4",
     "vue-router": "^3.0.1",
