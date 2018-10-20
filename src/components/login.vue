@@ -19,7 +19,7 @@
           <p>Visit <a href="https://github.com/manhtai/count29" target="_blank" rel="noopener">count29</a> repo and follow the instruction.</p>
 
           <h5>2. Setup MQTT server</h5>
-          <p>You can setup one MQTT broker for free at <a href="https://www.cloudmqtt.com/" target="_blank" rel="noopener">Cloud MQTT</a>.</p>
+          <p>Fire up one MQTT broker server using <a href="https://github.com/manhtai/mqtt-server" target="_blank" rel="noopener">this</a>.</p>
 
           <h5>3. Enter your MQTT credentials</h5>
           <form v-on:submit.prevent="submitLogin">
