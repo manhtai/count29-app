@@ -3,34 +3,41 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+// Count to 9 state
 const state = {
-  D0: {},
-  D1: {},
-  D2: {},
-  D3: {},
-  D4: {},
-  D5: {},
-  D6: {},
-  D7: {},
-  D8: {},
-  D9: {},
+  pins: [
+    {id: 'D0', val: 1},
+    {id: 'D1', val: 0},
+    {id: 'D2', val: 0},
+    {id: 'D3', val: 0},
+    {id: 'D4', val: 1},
+    {id: 'D5', val: 0},
+    {id: 'D6', val: 0},
+    {id: 'D7', val: 0},
+    {id: 'D8', val: 0},
+    {id: 'D9', val: 0},
+  ]
 }
 
 const mutations = {
-  updateD (state, D, data) {
-    state[D] = data
+  write (state, payload) {
+    state.pins = [
+      ...state.pins.filter(pin => pin.id != payload.id),
+      payload,
+    ]
   }
 }
 
 const actions = {
-  updateD: (context, data) => {
-    context.commit('updateD', data)
+  write: (context, data) => {
+    context.commit('write', data)
   }
 }
 
+
 const getters = {
-  user: state => {
-    return state.user
+  pins: state => {
+    return state.pins.sort()
   }
 }
 

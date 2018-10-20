@@ -79,24 +79,25 @@ export default {
     }
   },
   created () {
-    if (this.$cookie.get('mqttUrl')) {
-      router.push('dashboard')
-    }
+    self = this
+    ['user', 'password', 'server', 'port'].map(key => {
+      if (self.$cookie.get('mqtt' + key)) {
+        self.mqtt[key] = self.$cookie.get('mqtt' + key)
+      }
+    })
   },
   methods: {
     submitLogin () {
       this.isLoading = true
       this.error = ''
-      // Call MQTT here
       var client = mqtt.connect(this.mqttUrl)
       self = this
+      ['user', 'password', 'server', 'port'].map(key => self.$cookie.set('mqtt' + key, self.mqtt[key], 360))
       client.on('connect', function() {
-        self.$cookie.set('mqttUrl', self.mqttUrl, 360)
         self.isLoading = false
         router.push('dashboard')
         client.end()
-      })
-      client.on('error', function() {
+      }).on('error', function() {
         self.isLoading = false
         self.error = "Please check your credentials!"
       })
@@ -104,13 +105,3 @@ export default {
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-.logo-name {
-    img {
-      max-width: 200px;
-      margin-top: 30px;
-    }
-}
-</style>
