@@ -6,31 +6,38 @@ Vue.use(Vuex)
 // Count to 9 state
 const state = {
   pins: [
-    {id: 'D0', val: 1},
-    {id: 'D1', val: 0},
-    {id: 'D2', val: 0},
-    {id: 'D3', val: 0},
-    {id: 'D4', val: 1},
-    {id: 'D5', val: 0},
-    {id: 'D6', val: 0},
-    {id: 'D7', val: 0},
-    {id: 'D8', val: 0},
-    {id: 'D9', val: 0},
-  ]
+    {id: 'D0', val: true},
+    {id: 'D1', val: false},
+    {id: 'D2', val: false},
+    {id: 'D3', val: false},
+    {id: 'D4', val: true},
+    {id: 'D5', val: false},
+    {id: 'D6', val: false},
+    {id: 'D7', val: false},
+    {id: 'D8', val: false},
+    {id: 'D9', val: false},
+  ],
+  mqttUrl: ''
 }
 
 const mutations = {
-  write (state, payload) {
+  writePin (state, payload) {
     state.pins = [
       ...state.pins.filter(pin => pin.id != payload.id),
       payload,
     ]
+  },
+  saveMqtt (state, payload) {
+    state.mqttUrl = payload.mqttUrl
   }
 }
 
 const actions = {
-  write: (context, data) => {
-    context.commit('write', data)
+  writePin: (context, data) => {
+    context.commit('writePin', data)
+  },
+  saveMqtt: (context, data) => {
+    context.commit('saveMqtt', data)
   }
 }
 
@@ -38,7 +45,8 @@ const actions = {
 const getters = {
   pins: state => {
     return state.pins.sort()
-  }
+  },
+  mqttUrl: state => state.mqttUrl
 }
 
 export default new Vuex.Store({

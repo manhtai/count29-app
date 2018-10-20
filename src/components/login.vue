@@ -62,7 +62,8 @@
 
 <script>
 import router from '../router'
-var mqtt = require('mqtt')
+const mqtt = require('mqtt')
+const mqttKeys = ['user', 'password', 'server', 'port']
 
 export default {
   name: 'login',
@@ -75,12 +76,12 @@ export default {
   },
   computed: {
     mqttUrl: function () {
-      return 'wss://' + this.mqtt.user + ':' + this.mqtt.password + '@' + this.mqtt.server + ':' + this.mqtt.port
+      return 'ws://' + this.mqtt.user + ':' + this.mqtt.password + '@' + this.mqtt.server + ':' + this.mqtt.port
     }
   },
   created () {
-    self = this
-    ['user', 'password', 'server', 'port'].map(key => {
+    var self = this
+    mqttKeys.map(key => {
       if (self.$cookie.get('mqtt' + key)) {
         self.mqtt[key] = self.$cookie.get('mqtt' + key)
       }
@@ -91,12 +92,13 @@ export default {
       this.isLoading = true
       this.error = ''
       var client = mqtt.connect(this.mqttUrl)
-      self = this
-      ['user', 'password', 'server', 'port'].map(key => self.$cookie.set('mqtt' + key, self.mqtt[key], 360))
+      var self = this
+      mqttKeys.map(key => self.$cookie.set('mqtt' + key, self.mqtt[key], 360))
       client.on('connect', function() {
         self.isLoading = false
-        router.push('dashboard')
+        self.$store.dispatch('saveMqtt', {mqttUrl: self.mqttUrl})
         client.end()
+        router.push('dashboard')
       }).on('error', function() {
         self.isLoading = false
         self.error = "Please check your credentials!"

@@ -14,7 +14,7 @@
 
           <div class="row justify-content-center" v-for="row in [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]">
             <div class="col-md-3 mt-3" v-for="(pin, index) in pins" v-if="row.indexOf(index) > -1">
-              <button type="button" class="btn btn-lg btn-block" v-bind:class="{ 'btn-outline-primary': !pin.val, 'btn-primary': pin.val }" @click="turn" :id="pin.id">{{ pin.id }}</button>
+              <button type="button" class="btn btn-lg btn-block" v-bind:class="{ 'btn-outline-primary': !pin.val, 'btn-primary': pin.val }" @click="turn" :id="pin.id" :val="pin.val">{{ pin.id }}</button>
             </div>
           </div>
       </div>
@@ -23,25 +23,48 @@
 </template>
 
 <script>
+var mqtt = require('mqtt')
 import { mapGetters } from 'vuex'
+import router from '../router'
 
 export default {
   name: 'dashboard',
   data () {
     return {
       isLoading: false,
-      course: []
+      client: null
     }
   },
   computed: mapGetters([
     'pins'
   ]),
   created () {
-    this.isLoading = false
+    if (!this.$store.getters.mqttUrl) {
+      router.push({ path: '/' })
+    }
+    this.client = mqtt.connect(this.$store.getters.mqttUrl)
+    var self = this
+    this.client.on('connect', function () {
+      self.client.subscribe('inTopic', function (err) {
+        if (err) router.push({ path: '/' })
+      })
+      self.client.subscribe('outTopic', function (err) {
+        if (err) router.push({ path: '/' })
+      })
+    })
+
+    this.client.on('message', function (topic, message) {
+      if (topic == 'outTopic') {
+        message.toString().split(' ').map(pin => {
+          let [id, val] = pin.split(':')
+          self.$store.dispatch('writePin', {id: id, val: val})
+        })
+      }
+    })
   },
   methods: {
     turn: function (event) {
-      this.$store.dispatch('write', {id: event.target.id, val: 0})
+      this.client.publish('inTopic', event.target.id)
     }
   }
 }
