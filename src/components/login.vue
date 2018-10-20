@@ -76,7 +76,7 @@ export default {
   },
   computed: {
     mqttUrl: function () {
-      return 'ws://' + this.mqtt.user + ':' + this.mqtt.password + '@' + this.mqtt.server + ':' + this.mqtt.port
+      return 'wss://' + this.mqtt.user + ':' + this.mqtt.password + '@' + this.mqtt.server + ':' + this.mqtt.port
     }
   },
   created () {
