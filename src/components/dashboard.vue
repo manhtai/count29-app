@@ -13,7 +13,7 @@
           </div>
 
           <div class="row justify-content-center" v-for="row in [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0]]">
-            <div class="col-md-3 mt-3" v-for="(pin, index) in pins" v-if="row.indexOf(index) > -1">
+            <div class="col-3 col-md-3 mt-3" v-for="(pin, index) in pins" v-if="row.indexOf(index) > -1">
               <button type="button" class="btn btn-lg btn-block" v-bind:class="{ 'btn-outline-primary': pin.val == 0, 'btn-primary': pin.val == 1 }" @click="turn" :id="pin.id" :val="pin.val">{{ pin.id }}</button>
             </div>
           </div>
@@ -71,3 +71,11 @@ export default {
   }
 }
 </script>
+
+
+<style scoped lang="scss">
+.btn-outline-primary:hover {
+  background-color: transparent;
+  color: #007bff;
+}
+</style>
